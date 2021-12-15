@@ -12,6 +12,7 @@
 #include "download.h"
 #include "hash.h"
 #include "logging.h"
+#include "util/algorithm.h"
 #include "util/exception.h"
 #include "util/posix.h"
 
@@ -75,9 +76,14 @@ bool CatalogDiffTool<RoCatalogMgr>::Init() {
 
 template <typename RoCatalogMgr>
 bool CatalogDiffTool<RoCatalogMgr>::Run(const PathString& path) {
+  StopWatch timer;
+  timer.Start();
   DiffRec(path);
+  timer.Stop();
 
-  return true;
+  LogCvmfs(kLogCvmfs, kLogStdout, "CatalogDiffTool::Run(%s) time: %fs\n", path.c_str(), timer.GetTime());
+
+    return true;
 }
 
 template <typename RoCatalogMgr>
@@ -94,6 +100,8 @@ RoCatalogMgr* CatalogDiffTool<RoCatalogMgr>::OpenCatalogManager(
 
 template <typename RoCatalogMgr>
 void CatalogDiffTool<RoCatalogMgr>::DiffRec(const PathString& path) {
+  StopWatch timer;
+  timer.Start();
   // Terminate recursion upon reaching an ignored path
   if (IsIgnoredPath(path)) {
     assert(!IsReportablePath(path));
@@ -213,7 +221,10 @@ void CatalogDiffTool<RoCatalogMgr>::DiffRec(const PathString& path) {
 
     // Recursion
     DiffRec(old_path);
-  }
+
+    timer.Stop();
+    LogCvmfs(kLogCvmfs, kLogStdout, "CatalogDiffTool::DiffRec(%s) time: %fs\n", path.c_str(), timer.GetTime());
+}
 }
 
 #endif  // CVMFS_CATALOG_DIFF_TOOL_IMPL_H_
