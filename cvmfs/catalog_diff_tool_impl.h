@@ -81,7 +81,7 @@ bool CatalogDiffTool<RoCatalogMgr>::Run(const PathString& path) {
   DiffRec(path);
   timer.Stop();
 
-  LogCvmfs(kLogCvmfs, kLogStdout, "CatalogDiffTool::Run(%s) time: %fs\n", path.c_str(), timer.GetTime());
+  LogCvmfs(kLogReceiver, kLogSyslog, "CatalogDiffTool::Run(%s) time: %fs\n", path.c_str(), timer.GetTime());
 
     return true;
 }
@@ -223,7 +223,7 @@ void CatalogDiffTool<RoCatalogMgr>::DiffRec(const PathString& path) {
     DiffRec(old_path);
 
     timer.Stop();
-    LogCvmfs(kLogCvmfs, kLogStdout, "CatalogDiffTool::DiffRec(%s) time: %fs\n", path.c_str(), timer.GetTime());
+    LogCvmfs(kLogReceiver, kLogSyslog, "CatalogDiffTool::DiffRec(%s) time: %fs\n", path.c_str(), timer.GetTime());
 }
 }
 
